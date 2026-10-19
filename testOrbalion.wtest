@@ -1,0 +1,70 @@
+import orbalion.*
+
+describe "Test de Orbalion"{
+    const juan = new Entrenador(cicloSolarExperiencia = 15, precisionEstrategica = 90, rol = "Guía Mental")
+    const luminico1 = new Luminico(nombre = "LX", energiaBase = 1000, entrenador = juan, radiacionCapturada = 4000)
+    const sintetico1 = new Sintetico(nombre = "22L", energiaBase = 600, entrenador = juan, modulosActivos = 4)
+    const camaraDeFusion = new TecnologiaEspecial(nombre = "Camara de Fusion Energética", valorEnergetico = 500)
+    const nucleoGravitacional = new TecnologiaEspecial(nombre = "Nucleo Gravitacional", valorEnergetico = 20)
+    const eterico1 = new Eterico(nombre = "Los Reaper", energiaBase = 1200, entrenador = juan, fluctuacionDimensional = 80, cantPortalesEnerAbiertos = 3)
+
+    test "Juan no puede tener otro rol que no este en la lista de roles de entrenador"{
+        assert.throwsException({juan.cambiarRol("Médico")})
+    }
+    test "El equipo luminico1 devuelve, sin tener tecnologias activas, su energia base como total. No recibe aumento por tener más radiación que la permitida"{
+        assert.equals(luminico1.energiaTotal(), 1000)
+    }
+    test "El equipo luminico1 devuelve su energia base más el 10% porque no el limite de radiación permitido y no tiene tecnologias activas."{
+        assert.equals(luminico1.energiaTotal(), 1100)
+    }
+    test "El equipo sintetico1 devuelve, sin tener tecnologias activas, su energia base menos el 20%, por penalizacion de exceso de modulos permitidos, como energia total"{
+        assert.equals(sintetico1.energiaTotal(), 480)
+    }
+    test "El equipo sintetico1 devuelve, teniendo 2 tecnologias activas, como energia total  su energia base más las energias de las tecnologias activas."{
+        sintetico1.agregarTecnologia(camaraDeFusion)
+        sintetico1.agregarTecnologia(nucleoGravitacional)
+        assert.equals(sintetico1.energiaTotal(), 1120)
+    }
+    // CheckPoint 1
+    test "Juan es de élite galactica porque es un estratega cuántico con 12 ciclos y precisión de 90"{
+        assert.that(juan.esDeEliteGalactica())
+    }
+    test "Juan no es de élite galactica porque es un arquitecto de energía con 11 ciclos pero sin sintonia"{
+        assert.notThat(juan.esDeEliteGalactica())
+    }
+    test "Juan es de élite galactica porque es un guía mental con 15 ciclos"{
+        assert.that(juan.esDeEliteGalactica())
+    }
+    // CheckPoint 2
+    test "El equipo luminico1 es de prestigio universal al tener 3 cristales, un entrenador de elite y una tecnologia activa"{
+        luminico1.agregarTecnologia(camaraDeFusion)
+        luminico1.agregarTecnologia(nucleoGravitacional)
+        luminico1.agregarCristales("Zafiro Estelar")
+        luminico1.agregarCristales("Diamante Solar")
+        luminico1.agregarCristales("Rubi Espacial")
+        assert.that(luminico1.esDePrestigioUniversal())
+    }
+    test "El equipo sintetico1 es de prestigio universal al tener 4 módulos y todas las tecnologias activas"{
+        sintetico1.agregarTecnologia(camaraDeFusion)
+        sintetico1.agregarTecnologia(nucleoGravitacional)
+        assert.that(sintetico1.esDePrestigioUniversal())
+    }
+    test "El equipo luminico1 no es de prestigio porque no tiene ningun cristal, ni tampoco al menos una tecnologia activa"{
+        assert.notThat(luminico1.esDePrestigioUniversal())
+    }
+    test "El equipo sintetico1 no es de prestigio porque no tiene ninguna tecnologia activa"{
+        assert.notThat(sintetico1.esDePrestigioUniversal())
+    }
+    // CheckPoint 3
+    test "El equipo eterico1 con 3 portales, 80 de fluctuación y 2 tecnologias activas es de prestigio y su energia total tiene un incremento del 15%"{
+        eterico1.agregarTecnologia(camaraDeFusion)
+        eterico1.agregarTecnologia(nucleoGravitacional)
+        assert.that(eterico1.esDePrestigioUniversal())
+        assert.equals(eterico1.energiaTotal(), 1978)
+    }
+    test "Un equipo eterico sin tecnologias activas no es de prestigio y su energia total es igual a la energia base"{
+        assert.notThat(eterico1.esDePrestigioUniversal())
+        assert.equals(eterico1.energiaTotal(), 1200)
+    }
+    // CheckPoint 4
+}
